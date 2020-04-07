@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+const pass = Symbol('password');
 
 class User {
   constructor({
@@ -10,12 +11,11 @@ class User {
     this.id = id;
     this.name = name;
     this.login = login;
-    this.password = password;
+    this[pass] = password;
   }
 
-  static toResponse(user) {
-    const { id, name, login } = user;
-    return { id, name, login };
+  static getPassword(user) {
+    return user[pass];
   }
 }
 
