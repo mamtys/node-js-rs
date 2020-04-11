@@ -1,33 +1,41 @@
-const router = require('express').Router();
+/* eslint-disable require-atomic-updates */
+// this rule works bad with koa, and just works bad btw https://github.com/eslint/eslint/issues/11899
+
+const router = require('@koa/router')();
+const bodyParser = require('koa-body');
 const boardService = require('./board.service');
 
-router.route('/').get(async (req, res) => {
+router.get('/', async ctx => {
   const board = await boardService.getAll();
-  res.json(board);
+  ctx.body = board;
 });
 
-router.route('/:id').get(async (req, res) => {
-  const board = await boardService.getById(req.params.id);
+router.get('/:id', async ctx => {
+  const board = await boardService.getById(ctx.params.id);
   if (!board) {
-    res.status(404).json();
+    ctx.status = 404;
+    ctx.body = {
+      message: ''
+    };
+    return;
   }
-  res.json(board);
+  ctx.body = board;
 });
 
-router.route('/').post(async (req, res) => {
-  const board = await boardService.create(req.body);
-  res.json(board);
+router.post('/', bodyParser(), async ctx => {
+  const board = await boardService.create(ctx.request.body);
+  ctx.body = board;
 });
 
-router.route('/:id').put(async (req, res) => {
-  const board = await boardService.update(req.params.id, req.body);
-  res.json(board);
+router.put('/:id', bodyParser(), async ctx => {
+  await boardService.update(ctx.params.id, ctx.request.body);
+  ctx.body = { message: 'ok' };
 });
 
-router.route('/:id').delete(async (req, res) => {
-  await boardService.destroy(req.params.id);
+router.delete('/:id', async ctx => {
+  await boardService.destroy(ctx.params.id);
 
-  res.json();
+  ctx.body = '';
 });
 
-module.exports = router;
+module.exports = router.routes();

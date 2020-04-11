@@ -1,3 +1,6 @@
+/* eslint-disable node/no-unpublished-require */
+// uuid needes only in dev
+
 const uuid = require('uuid');
 
 class Task {

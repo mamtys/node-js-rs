@@ -5,9 +5,9 @@ const getAll = () => userRepo.getAll();
 
 const getById = id => userRepo.getById(id);
 
-const create = ({ name, login }) => userRepo.create({ name, login });
+const create = data => userRepo.create(data);
 
-const update = (id, { name, login }) => userRepo.update(id, { name, login });
+const update = (id, data) => userRepo.update(id, data);
 
 const destroy = id => {
   userRepo.destroy(id);
