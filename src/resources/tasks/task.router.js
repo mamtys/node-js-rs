@@ -34,7 +34,7 @@ router.put('/:boardId/tasks/:id', bodyParser(), async ctx => {
 });
 
 router.delete('/:boardId/tasks/:id', async ctx => {
-  taskService.destroy(ctx.params.id);
+  await taskService.destroy(ctx.params.id);
 
   ctx.body = '';
 });

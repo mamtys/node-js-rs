@@ -1,23 +1,26 @@
 const userRepo = require('./user.memory.repository');
 const taskRepo = require('../tasks/task.memory.repository');
 
-const getAll = () => userRepo.getAll();
+const errorHandler = require('../../helpers/serviceErrorHandler');
+const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
+const withErrorHandler = createErrorHandlerWrap(errorHandler);
 
-const getById = id => userRepo.getById(id);
+const getAll = async () => await userRepo.getAll();
 
-const create = data => userRepo.create(data);
+const getById = async id => await userRepo.getById(id);
 
-const update = (id, data) => userRepo.update(id, data);
+const create = async data => await userRepo.create(data);
 
-const destroy = id => {
-  userRepo.destroy(id);
-  taskRepo.unasignUser(id);
+const update = async (id, data) => await userRepo.update(id, data);
+
+const destroy = async id => {
+  await taskRepo.unasignUser(id);
+  await userRepo.destroy(id);
 };
 
-module.exports = {
-  getAll,
-  create,
-  getById,
-  update,
-  destroy
-};
+const service = [getAll, getById, create, update, destroy];
+
+module.exports = service.reduce((acc, func) => {
+  acc[func.name] = withErrorHandler(func);
+  return acc;
+}, {});

@@ -1,6 +1,10 @@
 const boardRepo = require('./board.memory.repository');
 const taskRepo = require('../tasks/task.memory.repository');
 
+const errorHandler = require('../../helpers/serviceErrorHandler');
+const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
+const withErrorHandler = createErrorHandlerWrap(errorHandler);
+
 const getAll = () => boardRepo.getAll();
 
 const getById = id => boardRepo.getById(id);
@@ -15,10 +19,9 @@ const destroy = id => {
   return boardRepo.destroy(id);
 };
 
-module.exports = {
-  getAll,
-  create,
-  getById,
-  update,
-  destroy
-};
+const service = [getAll, getById, create, update, destroy];
+
+module.exports = service.reduce((acc, func) => {
+  acc[func.name] = withErrorHandler(func);
+  return acc;
+}, {});

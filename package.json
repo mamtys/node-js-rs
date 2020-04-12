@@ -48,6 +48,7 @@
     "@koa/router": "^9.0.0",
     "cross-env": "6.0.3",
     "dotenv": "8.2.0",
+    "http-errors": "^1.7.3",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-helmet": "^5.2.0",

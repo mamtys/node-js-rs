@@ -26,7 +26,7 @@ router.put('/:id', bodyParser(), async ctx => {
 });
 
 router.delete('/:id', async ctx => {
-  userService.destroy(ctx.params.id);
+  await userService.destroy(ctx.params.id);
   ctx.body = '';
 });
 

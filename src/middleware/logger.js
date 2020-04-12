@@ -16,8 +16,11 @@ module.exports = {
       return format(
         `:remote-addr - :method :status :url HTTP/:http-version ":referrer" ":user-agent" body:'${JSON.stringify(
           ctx.request.body
-        ) || ''}' send:'${JSON.stringify(ctx.body)}'`
+        ) || ''}' query:'${JSON.stringify(ctx.query)}' send:'${JSON.stringify(
+          ctx.body
+        )}'`
       );
     }
-  })
+  }),
+  shutdown: cb => log4js.shutdown(cb)
 };

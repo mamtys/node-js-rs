@@ -1,6 +1,10 @@
 const { Board } = require('./board.model');
 const storage = require('../storage').boards;
 
+const errorHandler = require('../../helpers/repositoryErrorHandler');
+const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
+const withErrorHandler = createErrorHandlerWrap(errorHandler);
+
 const getAll = async () => {
   return storage;
 };
@@ -11,7 +15,7 @@ const getById = async id => {
 
 const update = async (id, data) => {
   const boardIndex = storage.findIndex(board => board.id === id);
-  storage[boardIndex] = { ...storage[boardIndex], ...data };
+  storage.splice(boardIndex, 1, { ...storage[boardIndex], ...data });
 };
 
 const create = async data => {
@@ -23,17 +27,12 @@ const create = async data => {
 
 const destroy = async id => {
   const boardIndex = storage.findIndex(board => board.id === id);
-  if (boardIndex < 0) {
-    return false;
-  }
   storage.splice(boardIndex, 1);
-  return true;
 };
 
-module.exports = {
-  getAll,
-  getById,
-  create,
-  update,
-  destroy
-};
+const repository = [getAll, getById, create, update, destroy];
+
+module.exports = repository.reduce((acc, func) => {
+  acc[func.name] = withErrorHandler(func);
+  return acc;
+}, {});

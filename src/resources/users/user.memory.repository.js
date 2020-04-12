@@ -1,35 +1,38 @@
 const User = require('./user.model');
 const storage = require('../storage').users;
 
+const errorHandler = require('../../helpers/repositoryErrorHandler');
+const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
+const withErrorHandler = createErrorHandlerWrap(errorHandler);
+
 const getAll = async () => {
-  return storage;
+  return await storage;
 };
 
 const getById = async id => {
-  return storage.find(user => user.id === id);
+  return await storage.find(user => user.id === id);
 };
 
 const update = async (id, data) => {
-  const userIndex = storage.findIndex(user => user.id === id);
-  storage[userIndex] = { ...storage[userIndex], ...data };
+  const userIndex = await storage.findIndex(user => user.id === id);
+  await storage.splice(userIndex, 1, { ...storage[userIndex], ...data });
 };
 
 const create = async data => {
-  const user = new User(data);
+  const user = await new User(data);
 
-  storage.push(user);
+  await storage.push(user);
   return user;
 };
 
 const destroy = async id => {
-  const userIndex = storage.findIndex(user => user.id === id);
-  storage.splice(userIndex, 1);
+  const userIndex = await storage.findIndex(user => user.id === id);
+  await storage.splice(userIndex, 1);
 };
 
-module.exports = {
-  getAll,
-  create,
-  getById,
-  update,
-  destroy
-};
+const repository = [getAll, getById, create, update, destroy];
+
+module.exports = repository.reduce((acc, func) => {
+  acc[func.name] = withErrorHandler(func);
+  return acc;
+}, {});

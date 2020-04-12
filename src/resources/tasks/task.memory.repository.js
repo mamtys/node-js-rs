@@ -1,38 +1,43 @@
+/* eslint-disable require-atomic-updates */
 const Task = require('./task.model');
 let storage = require('../storage').tasks;
 
+const errorHandler = require('../../helpers/repositoryErrorHandler');
+const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
+const withErrorHandler = createErrorHandlerWrap(errorHandler);
+
 const getAllByBoardId = async boardId => {
-  return storage.filter(task => task.boardId === boardId);
+  return await storage.filter(task => task.boardId === boardId);
 };
 
 const getByBoardIdAndId = async (boardId, id) => {
-  return storage.find(task => task.id === id && task.boardId === boardId);
+  return await storage.find(task => task.id === id && task.boardId === boardId);
 };
 
 const update = async (id, data) => {
-  const taskIndex = storage.findIndex(task => task.id === id);
-  storage[taskIndex] = { ...storage[taskIndex], ...data };
+  const taskIndex = await storage.findIndex(task => task.id === id);
+  await storage.splice(taskIndex, 1, { ...storage[taskIndex], ...data });
 };
 
 const create = async (boardId, data) => {
-  const task = new Task({ ...data, boardId });
-  storage.push(task);
+  const task = await new Task({ ...data, boardId });
+  await storage.push(task);
 
   return task;
 };
 
 const destroy = async id => {
-  const taskIndex = storage.findIndex(board => board.id === id);
+  const taskIndex = await storage.findIndex(board => board.id === id);
   if (taskIndex < 0) {
     return false;
   }
-  storage.splice(taskIndex, 1);
+  await storage.splice(taskIndex, 1);
 
   return true;
 };
 
 const unasignUser = async userId => {
-  storage.forEach(task => {
+  await storage.forEach(task => {
     if (task.userId === userId) {
       task.userId = null;
     }
@@ -40,10 +45,10 @@ const unasignUser = async userId => {
 };
 
 const deleteByBoardId = async boardId => {
-  storage = storage.filter(task => task.boardId !== boardId);
+  storage = await storage.filter(task => task.boardId !== boardId);
 };
 
-module.exports = {
+const repository = [
   getAllByBoardId,
   getByBoardIdAndId,
   create,
@@ -51,4 +56,9 @@ module.exports = {
   destroy,
   unasignUser,
   deleteByBoardId
-};
+];
+
+module.exports = repository.reduce((acc, func) => {
+  acc[func.name] = withErrorHandler(func);
+  return acc;
+}, {});
