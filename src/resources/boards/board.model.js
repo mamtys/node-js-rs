@@ -1,6 +1,4 @@
 /* eslint-disable node/no-unpublished-require */
-/* eslint-disable func-names */
-/* eslint-disable prettier/prettier */
 
 const uuid = require('uuid');
 const mongoose = require('mongoose');
@@ -20,7 +18,7 @@ const Board = new Schema({
   columns: [Column]
 });
 
-Board.method('toJSON', function () {
+Board.method('toJSON', function toJSON() {
   // eslint-disable-next-line no-unused-vars
   const { __v, _id, ...object } = this.toObject();
   object.id = _id;
