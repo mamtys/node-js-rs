@@ -1,26 +1,45 @@
 /* eslint-disable node/no-unpublished-require */
-// uuid needes only in dev
 
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const uuid = require('uuid');
 
-class Task {
-  constructor({
-    id = uuid(),
-    title = 'board',
-    order = 'order',
-    description = 'description',
-    userId = 'userId',
-    boardId = 'boardId',
-    columnId = 'columnId'
-  } = {}) {
-    this.id = id;
-    this.title = title;
-    this.order = order;
-    this.description = description;
-    this.userId = userId;
-    this.boardId = boardId;
-    this.columnId = columnId;
+const Task = new Schema({
+  _id: {
+    type: String,
+    default: uuid
+  },
+  order: {
+    type: Number,
+    default: 0
+  },
+  title: {
+    type: String,
+    default: 'title'
+  },
+  description: {
+    type: String,
+    default: 'description'
+  },
+  userId: {
+    type: String,
+    ref: 'User'
+  },
+  boardId: {
+    type: String,
+    ref: 'Board'
+  },
+  columnId: {
+    type: String,
+    ref: 'Column'
   }
-}
+});
 
-module.exports = Task;
+Task.method('toJSON', function toJSON() {
+  // eslint-disable-next-line no-unused-vars
+  const { __v, _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
+});
+
+module.exports = mongoose.model('Task', Task);

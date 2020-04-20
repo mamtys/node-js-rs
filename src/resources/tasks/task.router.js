@@ -4,6 +4,7 @@
 const router = require('@koa/router')();
 const bodyParser = require('koa-body');
 const taskService = require('./task.service');
+const filter = require('../../helpers/filterUndefined');
 
 router.get('/:boardId/tasks', async ctx => {
   const tasks = await taskService.getAllByBoardId(ctx.params.boardId);
@@ -24,12 +25,15 @@ router.get('/:boardId/tasks/:id', async ctx => {
 });
 
 router.post('/:boardId/tasks', bodyParser(), async ctx => {
-  const task = await taskService.create(ctx.params.boardId, ctx.request.body);
+  const task = await taskService.create(
+    ctx.params.boardId,
+    filter(ctx.request.body)
+  );
   ctx.body = task;
 });
 
 router.put('/:boardId/tasks/:id', bodyParser(), async ctx => {
-  await taskService.update(ctx.params.id, ctx.request.body);
+  await taskService.update(ctx.params.id, filter(ctx.request.body));
   ctx.body = { message: 'ok' };
 });
 

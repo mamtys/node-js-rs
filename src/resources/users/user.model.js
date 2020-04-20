@@ -1,25 +1,33 @@
 /* eslint-disable node/no-unpublished-require */
-// uuid needes only in dev
 
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const uuid = require('uuid');
-const pass = Symbol('password');
 
-class User {
-  constructor({
-    id = uuid(),
-    name = 'USER',
-    login = 'user',
-    password = 'P@55w0rd'
-  } = {}) {
-    this.id = id;
-    this.name = name;
-    this.login = login;
-    this[pass] = password;
+const User = new Schema({
+  _id: {
+    type: String,
+    default: uuid
+  },
+  name: {
+    type: String,
+    default: 'name'
+  },
+  login: {
+    type: String,
+    default: 'login'
+  },
+  password: {
+    type: String,
+    default: 'password'
   }
+});
 
-  static getPassword(user) {
-    return user[pass];
-  }
-}
+User.method('toJSON', function toJSON() {
+  // eslint-disable-next-line no-unused-vars
+  const { __v, _id, password, ...object } = this.toObject();
+  object.id = _id;
+  return object;
+});
 
-module.exports = User;
+module.exports = mongoose.model('User', User);

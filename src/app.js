@@ -12,6 +12,8 @@ const errorProppagation = require('./middleware/errorPropagation');
 const onError = require('./middleware/onError')(appLogger);
 const onNotFound = require('./middleware/onNotFound');
 
+require('./common/db');
+
 const app = new Koa();
 
 app.use(httpLogger);

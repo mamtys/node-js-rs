@@ -1,21 +1,21 @@
-const taskRepo = require('./task.memory.repository');
+const taskRepo = require('./task.repository');
 
 const errorHandler = require('../../helpers/serviceErrorHandler');
 const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
 const withErrorHandler = createErrorHandlerWrap(errorHandler);
 
-const getAll = () => taskRepo.getAll();
+const getAll = async () => await taskRepo.getAll();
 
-const getAllByBoardId = id => taskRepo.getAllByBoardId(id);
+const getAllByBoardId = async id => await taskRepo.getAllByBoardId(id);
 
 const getByBoardIdAndId = async (boardId, id) =>
-  taskRepo.getByBoardIdAndId(boardId, id);
+  await taskRepo.getByBoardIdAndId(boardId, id);
 
-const update = async (id, data) => taskRepo.update(id, data);
+const update = async (id, data) => await taskRepo.update(id, data);
 
-const create = async (boardId, data) => taskRepo.create(boardId, data);
+const create = async (boardId, data) => await taskRepo.create(boardId, data);
 
-const destroy = async id => taskRepo.destroy(id);
+const destroy = async id => await taskRepo.destroy(id);
 
 const service = [
   getAll,

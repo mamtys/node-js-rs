@@ -1,14 +1,10 @@
 /* eslint-disable node/no-unpublished-require */
-/* eslint-disable func-names */
-/* eslint-disable prettier/prettier */
 
 const uuid = require('uuid');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Column = require('./column.schema');
-
-const Board = new Schema({
+const Column = new Schema({
   _id: {
     type: String,
     default: uuid
@@ -17,14 +13,17 @@ const Board = new Schema({
     type: String,
     default: 'title'
   },
-  columns: [Column]
+  order: {
+    type: Number,
+    default: 0
+  }
 });
 
-Board.method('toJSON', function () {
+Column.method('toJSON', function toJSON() {
   // eslint-disable-next-line no-unused-vars
   const { __v, _id, ...object } = this.toObject();
   object.id = _id;
   return object;
 });
 
-module.exports = mongoose.model('Board', Board);
+module.exports = Column;

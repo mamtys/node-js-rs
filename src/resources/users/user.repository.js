@@ -1,33 +1,27 @@
-const { Board } = require('./board.model');
-const storage = require('../storage').boards;
+const User = require('./user.model');
 
 const errorHandler = require('../../helpers/repositoryErrorHandler');
 const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');
 const withErrorHandler = createErrorHandlerWrap(errorHandler);
 
 const getAll = async () => {
-  return storage;
+  return await User.find();
 };
 
 const getById = async id => {
-  return storage.find(board => board.id === id);
+  return await User.findById(id);
 };
 
 const update = async (id, data) => {
-  const boardIndex = storage.findIndex(board => board.id === id);
-  storage.splice(boardIndex, 1, { ...storage[boardIndex], ...data });
+  return await User.findByIdAndUpdate(id, data);
 };
 
 const create = async data => {
-  const board = new Board(data);
-
-  storage.push(board);
-  return board;
+  return await User.create(data);
 };
 
 const destroy = async id => {
-  const boardIndex = storage.findIndex(board => board.id === id);
-  storage.splice(boardIndex, 1);
+  return await User.findByIdAndDelete(id);
 };
 
 const repository = [getAll, getById, create, update, destroy];

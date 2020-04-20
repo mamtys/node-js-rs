@@ -1,5 +1,5 @@
-const userRepo = require('./user.memory.repository');
-const taskRepo = require('../tasks/task.memory.repository');
+const userRepo = require('./user.repository');
+const taskRepo = require('../tasks/task.repository');
 
 const errorHandler = require('../../helpers/serviceErrorHandler');
 const createErrorHandlerWrap = require('../../helpers/createErrorHandlerWrap');

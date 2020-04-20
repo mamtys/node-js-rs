@@ -9,7 +9,9 @@
   "description": "REST service starter for RS School",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "pm2 start src/server.js -i max",
+    "stop": "pm2 kill",
+    "nodemon": "nodemon src/server.js",
     "lint": "eslint ./ --ignore-path .gitignore --fix",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace",
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace"
@@ -52,7 +54,8 @@
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-helmet": "^5.2.0",
-    "koa-log4": "^2.3.2"
+    "koa-log4": "^2.3.2",
+    "mongoose": "^5.9.9"
   },
   "devDependencies": {
     "chai": "4.2.0",

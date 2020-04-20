@@ -4,6 +4,7 @@
 const router = require('@koa/router')();
 const bodyParser = require('koa-body');
 const boardService = require('./board.service');
+const filter = require('../../helpers/filterUndefined');
 
 router.get('/', async ctx => {
   const board = await boardService.getAll();
@@ -23,12 +24,12 @@ router.get('/:id', async ctx => {
 });
 
 router.post('/', bodyParser(), async ctx => {
-  const board = await boardService.create(ctx.request.body);
+  const board = await boardService.create(filter(ctx.request.body));
   ctx.body = board;
 });
 
 router.put('/:id', bodyParser(), async ctx => {
-  await boardService.update(ctx.params.id, ctx.request.body);
+  await boardService.update(ctx.params.id, filter(ctx.request.body));
   ctx.body = { message: 'ok' };
 });
 

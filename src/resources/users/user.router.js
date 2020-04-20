@@ -4,6 +4,7 @@
 const router = require('@koa/router')();
 const bodyParser = require('koa-body');
 const userService = require('./user.service');
+const filter = require('../../helpers/filterUndefined');
 
 router.get('/', async ctx => {
   const user = await userService.getAll();
@@ -16,12 +17,12 @@ router.get('/:id', async ctx => {
 });
 
 router.post('/', bodyParser(), async ctx => {
-  const user = await userService.create(ctx.request.body);
+  const user = await userService.create(filter(ctx.request.body));
   ctx.body = user;
 });
 
 router.put('/:id', bodyParser(), async ctx => {
-  await userService.update(ctx.params.id, ctx.request.body);
+  await userService.update(ctx.params.id, filter(ctx.request.body));
   ctx.body = { message: 'ok' };
 });
 
