@@ -47,7 +47,11 @@ components:
           type: number
         description:
           type: string
+<<<<<<< HEAD
         userId: 
+=======
+        userId:
+>>>>>>> ee60976ee4afde3b2d74e4ec936dcd00a7a06e6e
           type: string
   responses:
     UnauthorizedError:
@@ -283,8 +287,11 @@ paths:
               type: object
               title: example
               properties:
+<<<<<<< HEAD
                 id:
                   type: string
+=======
+>>>>>>> ee60976ee4afde3b2d74e4ec936dcd00a7a06e6e
                 title:
                   type: string
                   description: The board's name
@@ -399,7 +406,11 @@ paths:
           content:
             application/json:
               schema:
+<<<<<<< HEAD
                 $ref: "#/components/schemas/Task"           
+=======
+                $ref: "#/components/schemas/Task"
+>>>>>>> ee60976ee4afde3b2d74e4ec936dcd00a7a06e6e
         400:
           description: Bad request
         401:
@@ -444,9 +455,12 @@ paths:
               type: object
               title: example
               properties:
+<<<<<<< HEAD
                 id:
                   type: string
                   title: The task's ID
+=======
+>>>>>>> ee60976ee4afde3b2d74e4ec936dcd00a7a06e6e
                 title:
                   type: string
                   description: The task's title
@@ -465,7 +479,10 @@ paths:
                   type: string
                   description: Column ID
               required:
+<<<<<<< HEAD
                 - id
+=======
+>>>>>>> ee60976ee4afde3b2d74e4ec936dcd00a7a06e6e
                 - order
                 - boardId
                 - columnId
@@ -526,6 +543,10 @@ paths:
             application/json:
               schema:
                 type: string
+<<<<<<< HEAD
                 description: JWT Token          
+=======
+                description: JWT Token
+>>>>>>> ee60976ee4afde3b2d74e4ec936dcd00a7a06e6e
         403:
           description: Incorrect login or password
