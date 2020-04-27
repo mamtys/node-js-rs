@@ -18,7 +18,6 @@ const update = async (id, data) => {
 };
 
 const create = async (boardId, data) => {
-  console.log(data);
   return await Task.create({ ...data, boardId });
 };
 

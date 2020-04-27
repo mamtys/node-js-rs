@@ -13,12 +13,14 @@ const onError = require('./middleware/onError')(appLogger);
 const onNotFound = require('./middleware/onNotFound');
 
 require('./common/db');
+const auth = require('./common/auth/');
 
 const app = new Koa();
 
 app.use(httpLogger);
 app.use(errorProppagation);
 app.use(helmet());
+app.use(auth.initialize());
 app.use(router);
 app.use(swagger);
 

@@ -5,7 +5,7 @@ module.exports = async (ctx, next) => {
     await next();
   } catch (err) {
     ctx.status = err.status || 500;
-    ctx.body = { message: 'Internal Server Error' };
+    ctx.body = { message: err.message || 'Internal Server Error' };
     ctx.app.emit('error', err, ctx);
   }
 };

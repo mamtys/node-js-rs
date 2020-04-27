@@ -24,7 +24,11 @@ const destroy = async id => {
   return await User.findByIdAndDelete(id);
 };
 
-const repository = [getAll, getById, create, update, destroy];
+const getByLogin = async login => {
+  return await User.findOne({ login });
+};
+
+const repository = [getAll, getById, create, update, destroy, getByLogin];
 
 module.exports = repository.reduce((acc, func) => {
   acc[func.name] = withErrorHandler(func);

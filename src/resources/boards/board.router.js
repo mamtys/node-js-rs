@@ -5,13 +5,14 @@ const router = require('@koa/router')();
 const bodyParser = require('koa-body');
 const boardService = require('./board.service');
 const filter = require('../../helpers/filterUndefined');
+const { authenticate } = require('../../middleware/auth');
 
-router.get('/', async ctx => {
+router.get('/', authenticate('jwt'), async ctx => {
   const board = await boardService.getAll();
   ctx.body = board;
 });
 
-router.get('/:id', async ctx => {
+router.get('/:id', authenticate('jwt'), async ctx => {
   const board = await boardService.getById(ctx.params.id);
   if (!board) {
     ctx.status = 404;
@@ -23,20 +24,20 @@ router.get('/:id', async ctx => {
   ctx.body = board;
 });
 
-router.post('/', bodyParser(), async ctx => {
+router.post('/', bodyParser(), authenticate('jwt'), async ctx => {
   const board = await boardService.create(filter(ctx.request.body));
   ctx.body = board;
 });
 
-router.put('/:id', bodyParser(), async ctx => {
+router.put('/:id', bodyParser(), authenticate('jwt'), async ctx => {
   await boardService.update(ctx.params.id, filter(ctx.request.body));
   ctx.body = { message: 'ok' };
 });
 
-router.delete('/:id', async ctx => {
+router.delete('/:id', authenticate('jwt'), async ctx => {
   await boardService.destroy(ctx.params.id);
 
-  ctx.body = '';
+  ctx.body = { message: 'ok' };
 });
 
 module.exports = router.routes();
